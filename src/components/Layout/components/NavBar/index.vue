@@ -8,7 +8,7 @@
     <slot name="navCenter" />
     <div class="right-menu" :style="{color: navTextColor}">
       <slot name="navRight" />
-      <!-- 自定义内容 -->123
+      <!-- 自定义内容 -->
       <el-dropdown v-if="hasAvatar" class="avatar-container" trigger="click">
         <div class="avatar-wrapper" :style="{color: navTextColor}">
           <el-avatar :src="avatar" size="small" style="margin-right:10px" />
