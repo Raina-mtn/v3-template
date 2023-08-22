@@ -3,30 +3,39 @@
     :class="classObj"
     class="app-wrapper"
   >
-    <!-- <div
-      class="drawer-bg"
-      @click="handleClickOutside"
-    /> -->
+    <div
+      :class="{hasTagsView: showTagsView}"
+      class="main-container"
+      :style="{'width': `calc(100% - ${sideBarWidth})`,position:'relative',left:sideBarWidth,top:navBarHeight}"
+    >
     <Sidebar 
       class="sidebar-container" 
-      :style="{width:sideBarWidth}"
-      :showLogo="showLogo" 
+      :showLogo="showLogo"
       :isCollapse="isCollapse" 
       :Logo="logo" 
       :title="title"
       :sideBarWidth="sideBarWidth"
       />
-    <div
-      :class="{hasTagsView: showTagsView}"
-      class="main-container"
-      :style="{'margin-left': sideBarWidth}"
-    >
-      <Navbar>
-      </Navbar>
-      <div >
-        <!-- <TagsView v-if="showTagsView" /> -->
+      <div class="fixed-header" :style="{'width': `100%`}">
+        <NavBar :sideBarWidth="sideBarWidth" :navBarHeight="navBarHeight" :isCollapse="isCollapse" @toggleSideBar="toggleSideBar"></NavBar>
       </div>
-      <AppMain />
+        <!-- <div ><TagsView v-if="showTagsView" /></div> -->
+      <el-scrollbar wrap-class="scrollbar-wrapper" class="app-main" :style="{height:`calc(100vh - ${navBarHeight} - 20px)`}">
+        <router-view v-slot="{ Component }" :key="$route.path">
+          <transition name="fade-transform" mode="out-in">
+            <keep-alive>
+              <div>
+                <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path" />
+              </div>
+            </keep-alive>
+          </transition>
+          <transition name="fade-transform" mode="out-in">
+            <div>
+              <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.path" />
+            </div>
+          </transition>
+        </router-view>
+      </el-scrollbar>
       <!-- <RightPanel v-if="showSettings">
         <Settings />
       </RightPanel> -->
@@ -42,7 +51,7 @@ import logo from '@/assets/images/logo.png'
 export default defineComponent({
   components:{
     Sidebar,
-    NavBar
+    NavBar,
   },
   data() {
     return {
@@ -52,18 +61,14 @@ export default defineComponent({
     showLogo: {
       type:Boolean,
       default:true
-    },
+    },//是否显示面包屑
     showTagsView: {
       type:Boolean,
       default:false
-    },//是否显示面包屑
-    fixedHeader: {
-      type:Boolean,
-      default:true
     },
     title: {
       type:String,
-      default:'132'
+      default:'线路'
     },
     logo: {
       type:String,
@@ -72,6 +77,10 @@ export default defineComponent({
     sideBarWidth: {
       type:String,
       default:'200px'
+    },
+    navBarHeight: {
+      type:String,
+      default:'50px'
     },
   },
   setup () {
@@ -82,54 +91,60 @@ export default defineComponent({
       }
     })
 
-    function handleClickOutside():void{
-        isCollapse.value = !isCollapse
+    const toggleSideBar = ()=>{
+        isCollapse.value = !isCollapse.value
       }
 
     return {
       classObj,
       isCollapse,
-      handleClickOutside,
+      toggleSideBar,
     }
   }
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .app-wrapper {
-  @include clearfix;
   position: relative;
   height: 100%;
   width: 100%;
+  
+  .sidebar-container {
+    transition: width 0.28s;
+    height: 100%;
+    position: fixed;
+    font-size: 0px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    overflow: hidden;
+  }
+  
+  .main-container {
+    transition: margin-left .28s;
+    position: relative;
+    .app-main {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      
+      ::v-deep .scrollbar-wrapper {
+        overflow-x: hidden !important;
+      }
+    }
+  }
 }
 
-.drawer-bg {
-  background: #000;
-  opacity: 0.3;
-  width: 100%;
-  top: 0;
-  height: 100%;
-  position: absolute;
-  z-index: 999;
-}
 
-.main-container {
-  min-height: 100%;
-  transition: margin-left .28s;
-  position: relative;
-}
-
-.sidebar-container {
-  transition: width 0.28s;
-  height: 100%;
+.fixed-header {
   position: fixed;
-  font-size: 0px;
   top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1001;
-  overflow: hidden;
+  right: 0;
+  z-index: 9;
+  transition: width 0.28s;
 }
 
 .hideSidebar {

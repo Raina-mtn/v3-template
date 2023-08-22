@@ -5,19 +5,18 @@
       isCollapse ? 'simple-mode' : 'full-mode',
     ]"
   >
-    <template
-      v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children"
-    >
-      <el-menu-item :style="{'min-width': sideBarWidth}">
-        <SidebarItemLink v-if="theOnlyOneChild.meta" :icon="theOnlyOneChild.meta.icon" :title="theOnlyOneChild.meta.title" />
-      </el-menu-item>
+    <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
+      <router-link v-if="theOnlyOneChild.meta && theOnlyOneChild.meta.title" :to="theOnlyOneChild.path">
+        <el-menu-item :style="{'min-width': sideBarWidth}" :index="theOnlyOneChild.path">
+          <template #title>
+            <SidebarItemLink v-if="theOnlyOneChild.meta" :icon="theOnlyOneChild.meta.icon " :title="theOnlyOneChild.meta.title" :iconType="theOnlyOneChild.meta.iconType"  />
+          </template>
+        </el-menu-item>
+      </router-link>
     </template>
-    <el-sub-menu
-      v-else
-      :index="item.path"
-    >
+    <el-sub-menu v-else :index="item.path">
       <template #title>
-        <SidebarItemLink v-if="item.meta" :icon="item.meta.icon" :title="item.meta.title" :iconType="item.meta.title" />
+        <SidebarItemLink v-if="item.meta" :icon="item.meta.icon " :title="item.meta.title" :iconType="item.meta.iconType" />
       </template>
       <template v-if="item.children">
         <sidebar-item
@@ -90,7 +89,7 @@ export default defineComponent({
       }
       // If there is no children, return itself with path removed,
       // because this.basePath already conatins item's path information
-      return { ...props.item, path: '' }
+      return { ...props.item}
     })
 
     return {
@@ -103,19 +102,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.el-submenu.is-active > .el-submenu__title {
-  color: $subMenuActiveText !important;
+.el-menu-item.is-active{
+  background-color: $menuActiveBg;
 }
-
 .full-mode {
-  .nest-menu .el-submenu > .el-submenu__title,
-  .el-submenu .el-menu-item {
-    #background-color: $subMenuBg !important;
-
-    &:hover {
-      background-color: $subMenuHover !important;
-    }
-  }
   .el-menu-item{
     &>span{
       display: inline-block;

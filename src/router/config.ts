@@ -3,22 +3,33 @@ import Layout from '@/components/Layout/index.vue'
 export const asyncRoutes:RouteRecordRaw[]= [
   {
     path: "/login",
-    component: () => import("@/components/Layout/index.vue"),
+    component: () => import("@/views/login.vue"),
+    meta:{
+      title:'路由',
+      icon:'Avatar',
+      iconType:'el'
+    },
+  },
+  {
+    path: "/login1",
+    component: () => import("@/components/Layout/components/PageLayout.vue"),
     meta:{
       title:'路由1',
+      icon:'Avatar',
+      iconType:'el'
     },
     children:[
       {
-        path: "/login1",
-        component: () => import("@/components/Layout/index.vue"),
+        path: "/login2",
+        component: () => import("@/views/login1.vue"),
         meta:{
           title:'子路由1',
-          activeMenu:"/login"
+          activeMenu:"/login",
         },
       },
       {
-        path: "/login2",
-        component: () => import("@/components/Layout/index.vue"),
+        path: "/login3",
+        component: () => import("@/views/login2.vue"),
         meta:{
           title:'子路由2',
           activeMenu:"/login"
@@ -34,9 +45,5 @@ export const defaultRoutes:RouteRecordRaw[] = [
     name: 'index',
     redirect: "/login",
     children: asyncRoutes
-  },
-  {
-    path: "/login",
-    component: () => import("@/components/Layout/index.vue")
   },
 ]

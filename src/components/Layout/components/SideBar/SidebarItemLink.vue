@@ -1,7 +1,8 @@
 <template>
-  <el-icon v-if="iconType==='el'" :size="20" :is="icon"></el-icon>
+  <el-icon class="menu-icon" v-if="iconType==='el'" :size="20">
+    <component class="menu-icon" :is="icon"></component>
+  </el-icon>
   <i v-else-if="iconType==='iconfont'" :class="['iconfont', icon, 'sub-el-icon']" />
-
   <span slot='title'>{{ title }}</span>
 </template>
 
@@ -22,35 +23,14 @@ export default defineComponent({
       type:String,
       default: ''
     },
-  }
+  },
 })
-
-
-// export const item = (props, context) => {
-//   const { iconType,icon, title } = props
-//   console.log('icon :>> ', icon);
-//   console.log('title :>> ', title);
-//     const vnodes = []
-
-//     if (icon) {
-//       if (iconType==='el') {
-//         vnodes.push(`<el-icon :size="20"><${icon}></el-icon>`)
-//       } else if(iconType ==='iconfont') {
-//         vnodes.push(`<i class={['iconfont', ${icon}, 'sub-el-icon']} />`) // iconfont字体
-//       }
-//     }
-
-//     if (title) {
-//       vnodes.push(`<span slot='title'>{(${title})}</span>`)
-//     }
-//     return vnodes
-// }
 </script>
 
-<style scoped>
-.sub-el-icon {
-  color: currentColor;
-  width: 1em;
-  height: 1em;
-}
+<style lang="scss" scoped>
+  .menu-icon{
+    color: $menuIconColor;
+    width: 1em;
+    height: 1em;
+  }
 </style>

@@ -2,6 +2,7 @@
   <div
     :class="{'has-logo': showLogo}"
     class="sideWrap"
+    :style="{width:sideBarWidth}"
   >
     <SidebarLogo
       v-if="showLogo"
@@ -18,8 +19,9 @@
         :style="{
           '--el-menu-text-color':variables.menuText,
           '--el-menu-bg-color':variables.menuBg,
-          '--el-menu-active-color':menuActiveTextColor,
-          '--el-menu-hover-text-color':menuActiveTextColor,
+          '--el-menu-active-color':variables.menuActiveText,
+          '--el-menu-hover-text-color':variables.menuActiveText,
+          '--el-menu-hover-bg-color':variables.menuActiveBg,
           }"
         mode="vertical"
       >
@@ -57,10 +59,6 @@ export default defineComponent({
       type:Boolean,
       default:true
     },
-    sidebarTextTheme: {
-      type:String,
-      default:''
-    },
     Logo:{
       type:String,
       default: ''
@@ -71,22 +69,11 @@ export default defineComponent({
     },
     sideBarWidth: {
       type:String,
-      default:'300px'
+      default:'200px'
     },
   },
-  setup(props) {
+  setup() {
     const route = useRoute()
-
-    const menuActiveTextColor = computed(() => {
-
-      if (props.sidebarTextTheme) {
-        return props.sidebarTextTheme
-        // return store.state.settings.theme
-      } else {
-        return variables.menuActiveText
-      }
-    })
-
     const activeMenu = computed(() => {
       const { meta, path } = route
       if (meta !== null || meta !== undefined) {
@@ -99,7 +86,6 @@ export default defineComponent({
 
     return {
       asyncRoutes,
-      menuActiveTextColor,
       variables,
       activeMenu,
       
