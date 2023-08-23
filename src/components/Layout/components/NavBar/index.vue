@@ -1,32 +1,29 @@
 <template>
   <div class="navbar" :style="{height: navBarHeight}">
-    <!-- <BreadCrumb
-      id="breadcrumb-container"
-      class="breadcrumb-container"
-    /> -->
-    <div style="display:flex; align-items:center">
+    <div class="navbar-logo" :style="{width:sideBarWidth}">
+      <slot name="navLogo">
+        <img :src="Logo"/>
+      </slot>
+    </div>
+    
+    <div style="flex-grow: 1;display:flex; align-items:center;">
       <Hamburger v-if="hasHambuger" class="hamburger-container" :isCollapse="isCollapse" @toggleSideBar="toggleClick" />
-      <!-- <breadcrumb v-if="hasBreadcrumb" class="breadcrumb-container" :text-color="navTextColor" /> -->
       <slot name="navLeft" />
     </div>
     <slot name="navCenter" />
     <div class="right-menu">
-      <slot name="navRight" />
-      <el-dropdown
-        class="avatar-container"
-        trigger="click"
-        :style="{'--el-text-color-regular':variables.navTextColor}"
-      >
-        <div class="avatar-wrapper">
-          <el-avatar :src="avatar" size="small" style="margin-right:10px" />
-          <span>{{ user.userName || 'default' }}</span>
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <slot name="dropdownItems" />
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <slot name="navRight">
+        <el-space :size="12" spacer="|">
+          <div class="rightItem">
+            <el-avatar :src="avatar" :size="35" style="margin-right:10px" />
+            <span>欢迎您，{{ user.userName || 'default' }}</span>
+          </div>
+          <div class="rightItem">
+            <el-icon :size="20" style="margin-right:5px" ><SwitchButton /></el-icon>
+            <span>退出系统</span>
+          </div>
+        </el-space>
+      </slot>
     </div>
   </div>
 </template>
@@ -73,6 +70,10 @@ export default {
       type:Boolean,
       default:false
     },
+    Logo:{
+      type:String,
+      default: ''
+    },
   },
   emits: ['toggleSideBar'],
   setup(_, context){
@@ -107,10 +108,22 @@ export default {
   box-shadow: 0 1px 4px rgba(15, 18, 20, 0.1);
   background:$navBgColor;
   color:$navTextColor;
+  .navbar-logo{
+    display: flex;
+    align-items: center;
+    img{
+      margin-left: 20px;
+      width: 80px;
+    }
+  }
 }
 .right-menu{
   display: flex;
   align-items: center;
+  .rightItem{
+    display: flex;
+    align-items: center;
+  }
 }
 .avatar-wrapper{
   display: flex;

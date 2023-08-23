@@ -8,9 +8,7 @@
     <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
       <router-link v-if="theOnlyOneChild.meta && theOnlyOneChild.meta.title" :to="theOnlyOneChild.path">
         <el-menu-item :style="{'min-width': sideBarWidth}" :index="theOnlyOneChild.path">
-          <template #title>
-            <SidebarItemLink v-if="theOnlyOneChild.meta" :icon="theOnlyOneChild.meta.icon " :title="theOnlyOneChild.meta.title" :iconType="theOnlyOneChild.meta.iconType"  />
-          </template>
+          <SidebarItemLink v-if="theOnlyOneChild.meta" :icon="theOnlyOneChild.meta.icon " :title="theOnlyOneChild.meta.title" :iconType="theOnlyOneChild.meta.iconType"  />
         </el-menu-item>
       </router-link>
     </template>
@@ -153,18 +151,6 @@ export default defineComponent({
         }
       }
     }
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-svg {
-  margin-right: 16px;
-}
-
-.simple-mode {
-  svg {
-    margin-left: 20px;
   }
 }
 </style>

@@ -1,45 +1,59 @@
 <template>
-  <div
-    :class="classObj"
-    class="app-wrapper"
-  >
-    <div
-      :class="{hasTagsView: showTagsView}"
-      class="main-container"
-      :style="{'width': `calc(100% - ${sideBarWidth})`,position:'relative',left:sideBarWidth,top:navBarHeight}"
-    >
+  <div class="app-wrapper" :class="{'hideSidebar': isCollapse}">
     <Sidebar 
       class="sidebar-container" 
-      :showLogo="showLogo"
+      :showLogo="showLogo" 
       :isCollapse="isCollapse" 
-      :Logo="logo" 
       :title="title"
       :sideBarWidth="sideBarWidth"
+      :style="{top:navBarHeight, height:`calc(100vh - ${navBarHeight})`,width:sideBarWidth }"
       />
-      <div class="fixed-header" :style="{'width': `100%`}">
-        <NavBar :sideBarWidth="sideBarWidth" :navBarHeight="navBarHeight" :isCollapse="isCollapse" @toggleSideBar="toggleSideBar"></NavBar>
-      </div>
-        <!-- <div ><TagsView v-if="showTagsView" /></div> -->
-      <el-scrollbar wrap-class="scrollbar-wrapper" class="app-main" :style="{height:`calc(100vh - ${navBarHeight} - 20px)`}">
-        <router-view v-slot="{ Component }" :key="$route.path">
-          <transition name="fade-transform" mode="out-in">
-            <keep-alive>
-              <div>
-                <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path" />
-              </div>
-            </keep-alive>
-          </transition>
-          <transition name="fade-transform" mode="out-in">
-            <div>
-              <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.path" />
-            </div>
-          </transition>
-        </router-view>
-      </el-scrollbar>
+    <div class="nav-container">
+      <NavBar
+        :sideBarWidth="sideBarWidth"
+        :navBarHeight="navBarHeight" 
+        :isCollapse="isCollapse" 
+        :Logo="logo" 
+        @toggleSideBar="toggleSideBar"
+      >
+        <template #navLogo>
+          <slot name="navLogo" />
+        </template>
+        <template #navLeft>
+          <slot name="navLeft" />
+        </template>
+        <template #navCenter>
+          <slot name="navCenter" />
+        </template>
+        <template #navRight>
+          <slot name="navRight" />
+        </template>
+        <template #dropdownItems>
+          <slot name="dropdownItems" />
+        </template>
+      </NavBar>
       <!-- <RightPanel v-if="showSettings">
         <Settings />
       </RightPanel> -->
     </div>
+    <div class="main-container" :style="{'margin-left':sideBarWidth}">
+        <el-scrollbar wrap-class="scrollbar-wrapper" class="app-main" :style="{height:`calc(100vh - ${navBarHeight} - 20px)`}">
+          <router-view v-slot="{ Component }" :key="$route.path">
+            <transition name="fade-transform" mode="out-in">
+              <keep-alive>
+                <div>
+                  <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path" />
+                </div>
+              </keep-alive>
+            </transition>
+            <transition name="fade-transform" mode="out-in">
+              <div>
+                <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.path" />
+              </div>
+            </transition>
+          </router-view>
+        </el-scrollbar>
+      </div>
   </div>
 </template>
 
@@ -106,6 +120,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 
+
 .app-wrapper {
   position: relative;
   height: 100%;
@@ -113,19 +128,16 @@ export default defineComponent({
   
   .sidebar-container {
     transition: width 0.28s;
-    height: 100%;
     position: fixed;
-    font-size: 0px;
-    top: 0;
-    bottom: 0;
     left: 0;
     z-index: 1001;
     overflow: hidden;
   }
   
+  
   .main-container {
-    transition: margin-left .28s;
-    position: relative;
+      transition: margin-left .28s;
+      position: relative;
     .app-main {
       width: 100%;
       position: relative;
@@ -136,8 +148,83 @@ export default defineComponent({
       }
     }
   }
+  
+  .nav-container{
+    transition: margin-left .28s;
+    position: relative;
+  }
 }
 
+
+.hideSidebar {
+  .sidebar-container {
+    width: 54px !important;
+  }
+
+  .main-container {
+    margin-left: 54px !important;
+  }
+
+  .submenu-title-noDropdown {
+    padding: 0 !important;
+    position: relative;
+
+    .el-tooltip {
+      padding: 0 !important;
+
+      .svg-icon {
+        margin-left: 20px;
+      }
+
+      .sub-el-icon {
+        margin-left: 19px;
+      }
+    }
+  }
+
+  .el-submenu {
+    overflow: hidden;
+
+    &>.el-submenu__title {
+      // padding: 0 !important;
+
+      .svg-icon {
+        margin-left: 20px;
+      }
+
+      // .sub-el-icon {
+      //   margin-left: 19px;
+      // }
+
+      .el-submenu__icon-arrow {
+        display: none;
+      }
+    }
+  }
+
+  .el-menu--collapse {
+    .el-submenu {
+      &>.el-submenu__title {
+        &>span {
+          height: 0;
+          width: 0;
+          overflow: hidden;
+          visibility: hidden;
+          display: inline-block;
+        }
+      }
+    }
+    .el-menu-item{
+      span{
+        height: 0;
+          width: 0;
+          overflow: hidden;
+          visibility: hidden;
+          display: inline-block;
+      }
+    }
+  }
+}
 
 .fixed-header {
   position: fixed;

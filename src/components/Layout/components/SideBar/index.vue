@@ -4,12 +4,6 @@
     class="sideWrap"
     :style="{width:sideBarWidth}"
   >
-    <SidebarLogo
-      v-if="showLogo"
-      :collapse="isCollapse"
-      :Logo="Logo"
-      :title="title"
-    />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         class="el-menu-demo"
@@ -58,10 +52,6 @@ export default defineComponent({
     showLogo: {
       type:Boolean,
       default:true
-    },
-    Logo:{
-      type:String,
-      default: ''
     },
     title:{
       type:String,
@@ -144,4 +134,26 @@ export default defineComponent({
     background: $menuBg;
   } 
 }
+
+</style>
+<style lang="scss">
+
+  /*隐藏文字*/
+  .el-menu--collapse  .simple-mode .el-menu-item span{
+    display: none;
+  }
+  /*隐藏 > */
+  .el-menu--collapse  .simple-mode .el-sub-menu .el-sub-menu__title .el-sub-menu__icon-arrow{
+    display: none;
+  }
+  .el-menu--collapse  .simple-mode .el-sub-menu .el-sub-menu__title span{
+    display: none;
+  }
+
+  .router-link-active {
+  text-decoration: none;
+  }
+  a{
+    text-decoration: none;
+  }
 </style>
